@@ -3,9 +3,29 @@
 [ext_resource type="Script" uid="uid://dy0gtownmaref" path="res://scenes/Player.gd" id="1_v6fml"]
 [ext_resource type="Texture2D" uid="uid://dabdx15lfberv" path="res://assets/kenney_platformercharacters/PNG/Player/Poses/player_stand.png" id="2_3li8b"]
 [ext_resource type="Texture2D" uid="uid://frwcqhlecb58" path="res://assets/kenney_platformercharacters/PNG/Player/Poses/player_duck.png" id="2_mdl7e"]
+[ext_resource type="Texture2D" uid="uid://ckgxp270k3jbt" path="res://player_tilesheet.png" id="4_mdl7e"]
+[ext_resource type="AudioStream" uid="uid://o4jpdcbr8nj3" path="res://jump.wav" id="5_70d11"]
+[ext_resource type="Script" uid="uid://ks2bdd874hb7" path="res://jumpsound.gd" id="6_cw2d6"]
+[ext_resource type="AudioStream" uid="uid://cdrhccf1k38bq" path="res://dashsound.wav" id="7_cw2d6"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_mdl7e"]
 size = Vector2(46, 70.125)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cw2d6"]
+atlas = ExtResource("4_mdl7e")
+region = Rect2(80, 0, 80, 110)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qu4a1"]
+atlas = ExtResource("4_mdl7e")
+region = Rect2(80, 110, 80, 110)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_70d11"]
+atlas = ExtResource("4_mdl7e")
+region = Rect2(0, 110, 80, 110)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mdl7e"]
+atlas = ExtResource("4_mdl7e")
+region = Rect2(160, 110, 80, 110)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_3li8b"]
 animations = [{
@@ -24,6 +44,28 @@ animations = [{
 "loop": false,
 "name": &"idle",
 "speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cw2d6")
+}],
+"loop": true,
+"name": &"jump",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 0.6,
+"texture": SubResource("AtlasTexture_qu4a1")
+}, {
+"duration": 0.6,
+"texture": SubResource("AtlasTexture_70d11")
+}, {
+"duration": 0.6,
+"texture": SubResource("AtlasTexture_mdl7e")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 5.0
 }]
 
 [node name="Player" type="CharacterBody2D" unique_id=1897526259]
@@ -34,8 +76,16 @@ position = Vector2(0, 1.9375)
 shape = SubResource("RectangleShape2D_mdl7e")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1685130219]
-position = Vector2(8.34465e-07, -3.2499995)
 scale = Vector2(0.725, 0.72272736)
 sprite_frames = SubResource("SpriteFrames_3li8b")
-animation = &"idle"
-autoplay = "crouch"
+animation = &"jump"
+
+[node name="JumpSound" type="AudioStreamPlayer2D" parent="." unique_id=159680997]
+stream = ExtResource("5_70d11")
+script = ExtResource("6_cw2d6")
+
+[node name="DashSound" type="AudioStreamPlayer2D" parent="." unique_id=507462706]
+stream = ExtResource("7_cw2d6")
+
+[node name="AudioListener2D" type="AudioListener2D" parent="." unique_id=45809792]
+current = true

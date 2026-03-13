@@ -1,21 +1,37 @@
-# Laporan Tutorial 3 - Game Development
+# Laporan Tutorial 5 - Game Development
 
-Pada tugas Tutorial 3 ini, saya telah mengimplementasikan mekanika pergerakan dasar `CharacterBody2D` serta menyelesaikan seluruh tantangan pada Latihan Mandiri beserta penambahan fitur *polishing*. Seluruh logika pergerakan diimplementasikan di dalam skrip `Player.gd`.
+Pada tugas Tutorial 5 ini, saya telah mengimplementasikan pembuatan dan integrasi *game asset* berupa animasi *spritesheet* dan audio ke dalam proyek game yang telah dibuat pada Tutorial 3. Seluruh aset dan logika implementasi diintegrasikan ke dalam proyek Tutorial 3.
 
-## Penjelasan Implementasi Mekanika Pergerakan
+## Penjelasan Implementasi Assets Creation & Integration
 
-### 1. Polishing (Arah Hadap Karakter dan Animasi)
-**Proses Implementasi:** Untuk meningkatkan kenyamanan visual permainan, saya menambahkan logika pembalikan arah karakter (*sprite flipping*). Logika ini bekerja dengan mengevaluasi nilai `velocity.x`. Apabila karakter bergerak ke sumbu X negatif (`< 0`), maka properti `flip_h` akan dieksekusi menjadi `true`. Selain itu, saya memodifikasi *node* bawaan dari `Sprite2D` menjadi `AnimatedSprite2D` untuk memfasilitasi penggunaan *sprite frames* yang berbeda saat karakter dalam posisi berdiri (`idle`) dan berjongkok (`crouch`).
+### 1. Animasi Sprite Sheet (AnimatedSprite2D)
 
-### 2. Double Jump (Lompatan Ganda)
-**Proses Implementasi:** Mekanika ini memungkinkan karakter pemain untuk melompat maksimal dua kali. Saya mendefinisikan variabel `max_jumps` dan sisa lompatan (`jumps_left`). Setiap kali fungsi `is_on_floor()` mendeteksi bahwa karakter sedang berpijak pada lantai, nilai `jumps_left` akan direset kembali menjadi 2. Ketika pemain menekan tombol aksi lompat (`ui_up`) dan batas `jumps_left` masih lebih dari 0, kecepatan vertikal (`velocity.y`) karakter akan dimanipulasi sesuai dengan nilai `jump_speed`, lalu kuota `jumps_left` dikurangi satu.
+**Proses Implementasi:** Node `Sprite2D` pada karakter pemain diubah menjadi `AnimatedSprite2D` untuk mendukung animasi berbasis *spritesheet*. Spritesheet yang digunakan berasal dari paket aset gratis Kenney Platformer Characters. Terdapat empat animasi yang diimplementasikan, yaitu `idle` (diam), `walk` (berjalan), `jump` (melompat), dan `crouch` (berjongkok). 
 
-### 3. Crouching (Berjongkok)
-**Proses Implementasi:** Fitur jongkok diaktifkan menggunakan masukan dari tombol panah bawah (`ui_down`). Saat tombol ditekan, skrip akan menginstruksikan *node* `AnimatedSprite2D` untuk memainkan animasi "crouch". Secara bersamaan, kecepatan gerak horizontal karakter dikalikan dengan konstanta `crouch_multiplier` (sebesar 0.5) untuk menyimulasikan perlambatan pergerakan saat berjongkok. Untuk menjaga stabilitas *physics engine* dan menghindari isu *stuttering* akibat perubahan skala *hitbox* secara dinamis, penyelesaian ini difokuskan pada transisi animasi. Saat input tombol dilepas, animasi karakter akan otomatis kembali ke *state* "idle".
+### 2. Objek Baru: Heart (Hati)
 
-### 4. Dashing (Lari Cepat melalui *Double Tap*)
-**Proses Implementasi:** Mekanika lari cepat dipicu melalui penekanan ganda (*double tap*) pada tombol arah horizontal. Saya memanfaatkan fungsi `Time.get_ticks_msec()` untuk mengkalkulasi selisih waktu antar masukan pemain. Jika tombol arah yang sama ditekan berulang dalam rentang waktu kurang dari `double_tap_window` (0.3 detik) dan karakter tidak sedang berjongkok, maka variabel `is_dashing` bernilai `true`. Selama kalkulasi `dash_timer` (0.2 detik) berjalan, batas kecepatan gerak karakter diekskalasi hingga 2.5 kali lipat dari kecepatan normal (`dash_multiplier`).
+**Proses Implementasi:** Objek Heart dibuat sebagai *scene* terpisah menggunakan node `Area2D` sebagai *root*, dengan *child* node `AnimatedSprite2D` dan `CollisionShape2D`. Aset visual hati diperoleh dengan bantuan Claude AI. Signal `body_entered` pada `Area2D` dihubungkan ke fungsi `_on_body_entered`. Ketika pemain bersentuhan dengan objek Heart, sprite langsung disembunyikan (`visible = false`) dan *collision* dinonaktifkan (`set_deferred("disabled", true)`) agar objek tampak hilang secara instan. Setelah efek suara selesai diputar, node dihapus sepenuhnya menggunakan `queue_free()`.
+
+### 3. Objek Baru: Pohon (Tree)
+
+**Proses Implementasi:** Objek pohon dibuat menggunakan node `AnimatedSprite2D` dan dilengkapi animasi *sway* (bergoyang) menggunakan *spritesheet*. Aset visual pohon diperoleh dengan bantuan Claude AI. Objek pohon diatur memiliki nilai *Z Index* lebih rendah dari pemain sehingga posisinya berada di belakang *layer* karakter pemain secara visual.
+
+### 4. Aset Suara (Audio)
+
+**Proses Implementasi:** Terdapat tiga *Sound Effect* (SFX) yang diimplementasikan ke dalam permainan. Pertama, *Jump Sound* yang diputar setiap kali pemain melakukan lompatan, termasuk *double jump*, melalui pemanggilan `jump_sound.play()` pada kondisi pengecekan input lompat. Kedua, *Dash Sound* yang diputar setiap kali pemain melakukan *dash* melalui mekanisme *double tap*, dipanggil di dalam blok kondisi deteksi *double tap* untuk arah kiri maupun kanan. Ketiga, *Heart Sound* yang diputar ketika pemain mengambil objek Heart, menggunakan `await heart_sound.finished` agar node tidak langsung dihapus sebelum suara selesai.
+
+### 5. Background Music (BGM)
+
+**Proses Implementasi:** BGM diambil dari *soundtrack* game *Clair Obscur: Expedition 33*. Audio diimplementasikan menggunakan node `AudioStreamPlayer2D` (bukan `AudioStreamPlayer` biasa) agar mendukung sistem audio berbasis posisi. Properti *Autoplay* diaktifkan agar musik langsung diputar saat *scene* dibuka. Untuk membuat BGM *looping*, file audio diatur ulang melalui tab **Import** dengan mengaktifkan opsi *loop* kemudian melakukan *reimport*.
+
+### 6. Sistem Audio Relatif Terhadap Posisi Objek
+
+**Proses Implementasi:** Dengan memanfaatkan node `AudioStreamPlayer2D`, volume BGM secara otomatis berkurang ketika pemain semakin menjauh dari posisi node BGM, dan semakin keras ketika pemain mendekat. Node `AudioListener2D` ditambahkan sebagai *child* dari node *Player* dan diaktifkan sebagai *listener* utama melalui opsi **Make Current** di Inspector. Konfigurasi yang digunakan adalah *Max Distance* sebesar 2000 px dan nilai *Attenuation* sebesar 1.0.
 
 ## Referensi
-- Modul Tutorial 3 Game Development.
-- Dokumentasi resmi Godot Engine 4.x (Terkait modul Input, CharacterBody2D, dan AnimatedSprite2D).
+
+- Modul Tutorial 5 Game Development, Fakultas Ilmu Komputer Universitas Indonesia.
+- [Kenney Platformer Characters](https://kenney.nl/assets/platformer-pack-redux) — Aset spritesheet karakter pemain.
+- Dokumentasi resmi Godot Engine 4.x (Terkait modul `AnimatedSprite2D`, `Area2D`, `AudioStreamPlayer2D`, dan `AudioListener2D`).
+- Aset visual Heart dan pohon dibuat dengan bantuan Claude AI (Anthropic).
+- BGM: *Clair Obscur: Expedition 33* Original Soundtrack.

@@ -2,6 +2,9 @@
 
 [ext_resource type="PackedScene" uid="uid://ds60n6krsavle" path="res://scenes/Ground.tscn" id="1_elqb8"]
 [ext_resource type="PackedScene" uid="uid://dvlyhuf4uyjqv" path="res://scenes/Player.tscn" id="2_rvslj"]
+[ext_resource type="PackedScene" uid="uid://ceuxg1f4m10m6" path="res://scenes/Tree.tscn" id="3_0bbpv"]
+[ext_resource type="AudioStream" uid="uid://dugj342ctyx5i" path="res://backgroundmusic.wav" id="4_rarhs"]
+[ext_resource type="PackedScene" uid="uid://bya50lhe1716h" path="res://scenes/Heart.tscn" id="5_vcsgt"]
 
 [node name="Root" type="Node2D" unique_id=918599496]
 
@@ -16,3 +19,33 @@ position = Vector2(576, 394)
 
 [node name="Player" parent="." unique_id=1897526259 instance=ExtResource("2_rvslj")]
 position = Vector2(507, 321)
+
+[node name="Tree1" parent="." unique_id=783237095 instance=ExtResource("3_0bbpv")]
+z_index = -43
+position = Vector2(871, 207)
+
+[node name="Tree2" parent="." unique_id=995402812 instance=ExtResource("3_0bbpv")]
+z_index = -1
+position = Vector2(720, 208)
+
+[node name="Tree3" parent="." unique_id=388409016 instance=ExtResource("3_0bbpv")]
+z_index = -1
+position = Vector2(1007, 208)
+
+[node name="backgroundmusic" type="AudioStreamPlayer2D" parent="." unique_id=1582065449]
+stream = ExtResource("4_rarhs")
+volume_db = 1.825
+autoplay = true
+max_distance = 1116.0
+
+[node name="Heart" parent="." unique_id=147662163 instance=ExtResource("5_vcsgt")]
+position = Vector2(797, 254)
+
+[node name="CollisionShape2D" parent="Heart" index="0" unique_id=1428699988]
+position = Vector2(-4, 9)
+
+[node name="AnimatedSprite2D" parent="Heart" index="1" unique_id=1937065497]
+position = Vector2(-6.500007, 10.999997)
+scale = Vector2(0.8645832, 0.625)
+
+[editable path="Heart"]

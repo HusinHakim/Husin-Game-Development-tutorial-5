@@ -1,0 +1,76 @@
+[gd_scene format=3 uid="uid://ceuxg1f4m10m6"]
+
+[ext_resource type="Texture2D" uid="uid://cc8188042dgmm" path="res://palm_tree_idle_preview.png" id="1_nbyt5"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dn7q5"]
+atlas = ExtResource("1_nbyt5")
+region = Rect2(0, 0, 128, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_72j6q"]
+atlas = ExtResource("1_nbyt5")
+region = Rect2(128, 0, 128, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fxwtr"]
+atlas = ExtResource("1_nbyt5")
+region = Rect2(256, 0, 128, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rsxdo"]
+atlas = ExtResource("1_nbyt5")
+region = Rect2(384, 0, 128, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3yv26"]
+atlas = ExtResource("1_nbyt5")
+region = Rect2(512, 0, 128, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_n0j8u"]
+atlas = ExtResource("1_nbyt5")
+region = Rect2(640, 0, 128, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mj3bj"]
+atlas = ExtResource("1_nbyt5")
+region = Rect2(768, 0, 128, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gsb32"]
+atlas = ExtResource("1_nbyt5")
+region = Rect2(896, 0, 128, 192)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_p3we6"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dn7q5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_72j6q")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fxwtr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rsxdo")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3yv26")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_n0j8u")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mj3bj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gsb32")
+}],
+"loop": true,
+"name": &"tree sway",
+"speed": 5.0
+}]
+
+[node name="Node2D" type="Node2D" unique_id=783237095]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=539128055]
+position = Vector2(1, 0)
+sprite_frames = SubResource("SpriteFrames_p3we6")
+animation = &"tree sway"
+autoplay = "tree sway"
+frame_progress = 0.21915068
